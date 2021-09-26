@@ -50,3 +50,37 @@ int main(int argc , char **argv)
 	printf("\n\t\t The SumOfElements Of The Array Using OpenMP Directives Is %lf\n", sum);
 	printf("\t\t The SumOfElements Of The Array By Serial Calculation Is %lf\n\n", serial_sum);
 }
+
+
+/* --- Code 2 --- */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <omp.h>
+
+int main (int argc, char *argv[])
+{
+int partial_Sum;
+int total_Sum;
+int i;
+
+ #pragma omp parallel private(partial_Sum) shared(total_Sum)
+{
+partial_Sum = 0;
+total_Sum = 0;
+
+ #pragma omp for
+for(i=1; i<=1000; i++)
+{
+partial_Sum += i;
+}
+
+//Create thread safe region.
+#pragma omp critical
+{
+//add each threads partial sum to the total sum
+total_Sum += partial_Sum;
+}
+printf("Total Sum: %d\n", total_Sum);
+}
+}
